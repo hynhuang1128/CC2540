@@ -380,11 +380,11 @@ static simpleProfileCBs_t simpleBLEPeripheral_SimpleProfileCBs =
  uint8 set_Flag=0; 
  uint32 higt_Value;
  uint32 set_Value;
-   
+
 uint8 timesVab = 0;
 uint16 freqVab = 0;
 uint8 vabStartFlag = 0;
- 
+
 void SimpleBLEPeripheral_Init( uint8 task_id )
 {
   simpleBLEPeripheral_TaskID = task_id;
@@ -518,11 +518,10 @@ void SimpleBLEPeripheral_Init( uint8 task_id )
 #endif // #if defined( CC2540_MINIDK )
   P0SEL = 0x6c;
   P0DIR |= 0x13;
-  //P0_7 = 0;
+  
   P1SEL = 0; // Configure Port 1 as GPIO
-  P1DIR |=0X2F;
-  P1=0X0F;
-
+  P1DIR |=0X0F;
+  P1|=0X0F;
 #if (defined HAL_LCD) && (HAL_LCD == TRUE)
 
 #if defined FEATURE_OAD
@@ -619,7 +618,7 @@ uint16 SimpleBLEPeripheral_ProcessEvent( uint8 task_id, uint16 events )
     }
       //             //ctrl+k or ctrl+shift+k
     if(set_Flag==1){
-             if(set_Value>245 && set_Value<500){
+             if(set_Value>630 && set_Value<1270){
                if(higt_Value<set_Value-17)
              { P1 =0X0B;    
              }
@@ -867,6 +866,7 @@ static void performPeriodicTask( void )
   //  uint8 valueToCopy;
   uint8 values[20]={1,2,3,4,5,6,7,8};
   //  uint8 stat;
+  
   if(vabStartFlag){
   freqVab++;
   if(freqVab < 30){
@@ -882,12 +882,13 @@ static void performPeriodicTask( void )
       vabStartFlag = 0;
   }
 }
+
   // Call to retrieve the value of the third characteristic in the profile
   //  stat = SimpleProfile_GetParameter( SIMPLEPROFILE_CHAR3, &valueToCopy);
   //判斷當前姿態是否有改變，改變的話將狀態和時間戳存入到緩存區內
 //  if(ble_connect_status){
     if(!onDuty){
-        if(higt_Value > 400){
+        if(higt_Value > 900){
           currentStatus = onStand;
           ledStand = 0;
           ledSit = 1;
@@ -1096,7 +1097,7 @@ static void simpleProfileChangeCB( uint8 paramID )
             char6cb[3]=timestampc/16777216%256;
             char6cb[4]=0;
             char6cb[5]=0xdd;
-            SimpleProfile_SetParameter( SIMPLEPROFILE_CHAR6,SIMPLEPROFILE_CHAR6_LEN,char6cb );*/ 
+            SimpleProfile_SetParameter( SIMPLEPROFILE_CHAR6,SIMPLEPROFILE_CHAR6_LEN,char6cb ); */
            }
            else if(ble_Value[2]==0x07){
              sendFlag = 1; 
@@ -1109,9 +1110,6 @@ static void simpleProfileChangeCB( uint8 paramID )
              char6cb[1]=timeStampG/16777216%256;
              char6cb[5]=0xdd;
              SimpleProfile_SetParameter( SIMPLEPROFILE_CHAR6,SIMPLEPROFILE_CHAR6_LEN,char6cb ); 
-           }
-           else if(ble_Value[2]==0x08){
-             //reserved
            }
            else
            {P1 =0X0F; }
