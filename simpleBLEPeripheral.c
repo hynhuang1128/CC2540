@@ -622,7 +622,6 @@ uint16 SimpleBLEPeripheral_ProcessEvent( uint8 task_id, uint16 events )
     }
       //             //ctrl+k or ctrl+shift+k
     if(set_Flag==1){
-             if(set_Value>240 && set_Value<500){
                if(higt_Value<set_Value-10)
              { P1 =0X0B;    
              }
@@ -893,7 +892,7 @@ static void performPeriodicTask( void )
   //判斷當前姿態是否有改變，改變的話將狀態和時間戳存入到緩存區內
 //  if(ble_connect_status){
     if(!onDuty){
-        if(higt_Value > 400){
+        if(higt_Value > 900){
           currentStatus = onStand;
           ledStand = 0;
           ledSit = 1;
