@@ -385,6 +385,10 @@ uint8 timesVab = 0;
 uint16 freqVab = 0;
 uint8 vabStartFlag = 0;
 
+uint8 startVabTime = 30;
+uint8 endVabTime = 15;
+uint8 vabCount = 15;
+
 void SimpleBLEPeripheral_Init( uint8 task_id )
 {
   simpleBLEPeripheral_TaskID = task_id;
@@ -1089,7 +1093,14 @@ static void simpleProfileChangeCB( uint8 paramID )
             SimpleProfile_SetParameter( SIMPLEPROFILE_CHAR6,SIMPLEPROFILE_CHAR6_LEN,char6cb ); 
            }
            else if(ble_Value[2]==0x06){
-             vabStartFlag = 1;
+             if(ble_Value[3] != 0){
+                 vabStartFlag = 1;
+             }else{
+                 timesVab = 0;
+                 freqVab = 0;
+                 motorVab = 0;
+                 vabStartFlag = 0;
+             }
             /*timestampc = ble_Value[3]*16777216+ble_Value[4]*65536+ble_Value[5]*256+ble_Value[6];
             osal_setClock( timestampc );
             char6cb[0]=timestampc%256;
