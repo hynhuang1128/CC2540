@@ -109,7 +109,7 @@
  */
 
 // How often to perform periodic event
-#define SBP_PERIODIC_EVT_PERIOD                  20
+#define SBP_PERIODIC_EVT_PERIOD                  30
 
 // What is the advertising interval when device is discoverable (units of 625us, 160=100ms)
 #define DEFAULT_ADVERTISING_INTERVAL          160
@@ -520,8 +520,8 @@ void SimpleBLEPeripheral_Init( uint8 task_id )
   P0DIR |= 0x13;
   
   P1SEL = 0; // Configure Port 1 as GPIO
-  P1DIR |=0X0F;
-  P1|=0X0F;
+  P1DIR |= 0X2F;
+  P1 = 0X0F;
 #if (defined HAL_LCD) && (HAL_LCD == TRUE)
 
 #if defined FEATURE_OAD
@@ -1110,6 +1110,9 @@ static void simpleProfileChangeCB( uint8 paramID )
              char6cb[1]=timeStampG/16777216%256;
              char6cb[5]=0xdd;
              SimpleProfile_SetParameter( SIMPLEPROFILE_CHAR6,SIMPLEPROFILE_CHAR6_LEN,char6cb ); 
+           }
+           else if(ble_Value[2]==0x08){
+             //reserved
            }
            else
            {P1 =0X0F; }
