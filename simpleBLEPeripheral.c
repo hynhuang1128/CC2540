@@ -520,8 +520,8 @@ void SimpleBLEPeripheral_Init( uint8 task_id )
   P0DIR |= 0x13;
   
   P1SEL = 0; // Configure Port 1 as GPIO
-  P1DIR |=0X2F;
-  P1|=0X0F;
+  P1DIR |= 0X2F;
+  P1 = 0X0F;
 #if (defined HAL_LCD) && (HAL_LCD == TRUE)
 
 #if defined FEATURE_OAD
@@ -619,10 +619,10 @@ uint16 SimpleBLEPeripheral_ProcessEvent( uint8 task_id, uint16 events )
       //             //ctrl+k or ctrl+shift+k
     if(set_Flag==1){
              if(set_Value>240 && set_Value<500){
-               if(higt_Value<set_Value-17)
+               if(higt_Value<set_Value-10)
              { P1 =0X0B;    
              }
-             else if(higt_Value>(set_Value+17))
+             else if(higt_Value>(set_Value+10))
                      {P1 =0X07; //down
                      }
              else{
@@ -879,6 +879,7 @@ static void performPeriodicTask( void )
   }
   if(timesVab > 15){
       timesVab = 0;
+      freqVab = 0;
       vabStartFlag = 0;
   }
 }
