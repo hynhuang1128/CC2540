@@ -385,6 +385,10 @@ uint8 timesVab = 0;
 uint16 freqVab = 0;
 uint8 vabStartFlag = 0;
 
+uint8 startVabTime = 30;
+uint8 endVabTime = 15;
+uint8 vabCount = 15;
+
 void SimpleBLEPeripheral_Init( uint8 task_id )
 {
   simpleBLEPeripheral_TaskID = task_id;
@@ -618,11 +622,11 @@ uint16 SimpleBLEPeripheral_ProcessEvent( uint8 task_id, uint16 events )
     }
       //             //ctrl+k or ctrl+shift+k
     if(set_Flag==1){
-             if(set_Value>630 && set_Value<1270){
-               if(higt_Value<set_Value-17)
+             if(set_Value>240 && set_Value<500){
+               if(higt_Value<set_Value-10)
              { P1 =0X0B;    
              }
-             else if(higt_Value>(set_Value+17))
+             else if(higt_Value>(set_Value+10))
                      {P1 =0X07; //down
                      }
              else{
@@ -879,6 +883,7 @@ static void performPeriodicTask( void )
   }
   if(timesVab > 15){
       timesVab = 0;
+      freqVab = 0;
       vabStartFlag = 0;
   }
 }
@@ -888,7 +893,7 @@ static void performPeriodicTask( void )
   //判斷當前姿態是否有改變，改變的話將狀態和時間戳存入到緩存區內
 //  if(ble_connect_status){
     if(!onDuty){
-        if(higt_Value > 900){
+        if(higt_Value > 400){
           currentStatus = onStand;
           ledStand = 0;
           ledSit = 1;
@@ -1088,7 +1093,14 @@ static void simpleProfileChangeCB( uint8 paramID )
             SimpleProfile_SetParameter( SIMPLEPROFILE_CHAR6,SIMPLEPROFILE_CHAR6_LEN,char6cb ); 
            }
            else if(ble_Value[2]==0x06){
-             vabStartFlag = 1;
+             if(ble_Value[3] != 0){
+                 vabStartFlag = 1;
+             }else{
+                 timesVab = 0;
+                 freqVab = 0;
+                 motorVab = 0;
+                 vabStartFlag = 0;
+             }
             /*timestampc = ble_Value[3]*16777216+ble_Value[4]*65536+ble_Value[5]*256+ble_Value[6];
             osal_setClock( timestampc );
             char6cb[0]=timestampc%256;
