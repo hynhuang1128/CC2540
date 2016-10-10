@@ -623,10 +623,10 @@ uint16 SimpleBLEPeripheral_ProcessEvent( uint8 task_id, uint16 events )
       //             //ctrl+k or ctrl+shift+k
     if(set_Flag==1){
              if(set_Value>630 && set_Value<1270){
-               if(higt_Value<set_Value-10)
+               if(higt_Value<set_Value-17)
              { P1 =0X0B;    
              }
-             else if(higt_Value>(set_Value+10))
+             else if(higt_Value>(set_Value+17))
                      {P1 =0X07; //down
                      }
              else{
