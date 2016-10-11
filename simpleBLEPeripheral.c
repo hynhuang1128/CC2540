@@ -1137,6 +1137,9 @@ static void simpleProfileChangeCB( uint8 paramID )
              char6cb[5]=0xdd;
              SimpleProfile_SetParameter( SIMPLEPROFILE_CHAR6,SIMPLEPROFILE_CHAR6_LEN,char6cb ); 
            }
+           else if(ble_Value[2]==0x08){
+             //reserved
+           }
            else
            {P1 =0X0F; }
            SimpleProfile_SetParameter( SIMPLEPROFILE_CHAR6,SIMPLEPROFILE_CHAR6_LEN,char6cb ); 
