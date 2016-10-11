@@ -89,6 +89,10 @@
 /*********************************************************************
  * MACROS
  */
+/*imperial version or metric version */
+#define IMPERIAL_VERSION
+//#define METRIC_VERSION
+
 #define FIFO_SIZE 6
 #define FIFOFULL 0
 #define FIFOEmpty 1
@@ -104,12 +108,22 @@
 #define onSit 5
 #define onStand 7
 #define onLeave 1
+
+#ifdef IMPERIAL_VERSION
+#define VER_THERSHOLD_LOW 250
+#define VER_THERSHOLD_HIGH 500
+#define VER_HIGT_JUDGE 400
+#else
+#define VER_THERSHOLD_LOW 630
+#define VER_THERSHOLD_HIGH 1270
+#define VER_HIGT_JUDGE 900
+#endif
 /*********************************************************************
  * CONSTANTS
  */
 
 // How often to perform periodic event
-#define SBP_PERIODIC_EVT_PERIOD                  20
+#define SBP_PERIODIC_EVT_PERIOD                  30
 
 // What is the advertising interval when device is discoverable (units of 625us, 160=100ms)
 #define DEFAULT_ADVERTISING_INTERVAL          160
@@ -622,7 +636,7 @@ uint16 SimpleBLEPeripheral_ProcessEvent( uint8 task_id, uint16 events )
     }
       //             //ctrl+k or ctrl+shift+k
     if(set_Flag==1){
-             if(set_Value>240 && set_Value<500){
+             if(set_Value>VER_THERSHOLD_LOW && set_Value<VER_THERSHOLD_HIGH){
                if(higt_Value<set_Value-10)
              { P1 =0X0B;    
              }
@@ -893,7 +907,7 @@ static void performPeriodicTask( void )
   //判斷當前姿態是否有改變，改變的話將狀態和時間戳存入到緩存區內
 //  if(ble_connect_status){
     if(!onDuty){
-        if(higt_Value > 400){
+        if(higt_Value > VER_HIGT_JUDGE){
           currentStatus = onStand;
           ledStand = 0;
           ledSit = 1;
