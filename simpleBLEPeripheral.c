@@ -199,6 +199,11 @@ uint8 currentStatus = 0;
 uint8 previousStatus = -1;
 
 uint8 ble_connect_status = 0;
+
+uint8 setValueDiffer = 17;
+uint16 hightJudge_Value = 900;
+uint16 hightHighThershold_Value = 1270;
+uint16 hightLowThershold_Value = 630;
 /*********************************************************************
  * GLOBAL VARIABLES
  */
@@ -636,7 +641,7 @@ uint16 SimpleBLEPeripheral_ProcessEvent( uint8 task_id, uint16 events )
     }
       //             //ctrl+k or ctrl+shift+k
     if(set_Flag==1){
-             if(set_Value>VER_THERSHOLD_LOW && set_Value<VER_THERSHOLD_HIGH){
+             if(set_Value > hightLowThershold_Value && set_Value < hightHighThershold_Value){
                if(higt_Value<set_Value-10)
              { P1 =0X0B;    
              }
@@ -907,7 +912,7 @@ static void performPeriodicTask( void )
   //判斷當前姿態是否有改變，改變的話將狀態和時間戳存入到緩存區內
 //  if(ble_connect_status){
     if(!onDuty){
-        if(higt_Value > VER_HIGT_JUDGE){
+        if(higt_Value > hightJudge_Value){
           currentStatus = onStand;
           ledStand = 0;
           ledSit = 1;
@@ -1191,7 +1196,7 @@ char *bdAddr2Str( uint8 *pAddr )
 #endif // (defined HAL_LCD) && (HAL_LCD == TRUE)
 
 uint16 higt_Previous = 0;
-uint8 higt_change = 0;
+uint8 higt_Change = 0;
 
 static void NpiSerialCallback( uint8 port, uint8 events )
 {
