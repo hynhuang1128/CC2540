@@ -825,6 +825,9 @@ static void peripheralStateNotificationCB( gaprole_States_t newState )
           ble_connect_status = 0;
           ledStand = 1;
           ledSit = 1;
+          P1 =0X0F; 
+          set_Flag=0;
+          set_Value=0;
       }
       break;
 
