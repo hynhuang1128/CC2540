@@ -1230,6 +1230,21 @@ static void NpiSerialCallback( uint8 port, uint8 events )
         higt_Previous = higt_Value;
       }*/
         higt_Value=buf[3]*256+buf[4];
+        higt_Change++;
+      if(higt_Change > 50){
+        higt_Change = 0; 
+        if(higt_Value <550){
+          hightJudge_Value = 400;
+          hightHighThershold_Value = 500; 
+          hightLowThershold_Value = 250;
+          setValueDiffer = 10;
+        }else{
+          hightJudge_Value = 900;
+          hightHighThershold_Value = 1270;
+          hightLowThershold_Value = 630;
+          setValueDiffer = 17;
+        }
+      }
         if(flag_count > 3 && higt_Previous != higt_Value){
           SimpleProfile_SetParameter( SIMPLEPROFILE_CHAR7,SIMPLEPROFILE_CHAR7_LEN,ble_buf );
           higt_Previous = higt_Value;
