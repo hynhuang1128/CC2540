@@ -885,7 +885,7 @@ uint8 sendCount = 0;
  *
  * @return  none
  */
-
+uint16 statuStabalizeCount = 0;
 static void performPeriodicTask( void )
 {
   uint8 status_buf[7];
@@ -933,29 +933,36 @@ static void performPeriodicTask( void )
 //      ledBle = 1;
 //  }
   if(previousStatus != currentStatus){
-    previousStatus = currentStatus;
-    //獲得當前的時間戳
-    osalTimeUpdate();  
-    timeStampG = osal_getClock();
-    dataNode[nodeCount].timeStamp = timeStampG;
-    dataNode[nodeCount].status = currentStatus;
-    nodeCount++;
-      status_buf[0]=0x06;
-      status_buf[1]=0x55;
-      status_buf[2]=0xaa;
-      status_buf[3]=0xff;
-      status_buf[4]=0x00;
-      status_buf[5]=currentStatus;
-      status_buf[6]=0xdd;
-      SimpleProfile_SetParameter( SIMPLEPROFILE_CHAR7,SIMPLEPROFILE_CHAR7_LEN,status_buf );
-    //如果數據溢出
-    if(nodeCount > 200){
-      for(int i = 0; i<200 ; i++){
-        dataNode[i] = dataNode[i+1];
-      }
-      nodeCount = 0;
+    statuStabalizeCount++;
+    if(statuStabalizeCount > 200){
+      statuStabalizeCount = 0;
+      previousStatus = currentStatus;
+      //獲得當前的時間戳
+      osalTimeUpdate();  
+      timeStampG = osal_getClock();
+      dataNode[nodeCount].timeStamp = timeStampG;
+      dataNode[nodeCount].status = currentStatus;
+      nodeCount++;
+        status_buf[0]=0x06;
+        status_buf[1]=0x55;
+        status_buf[2]=0xaa;
+        status_buf[3]=0xff;
+        status_buf[4]=0x00;
+        status_buf[5]=currentStatus;
+        status_buf[6]=0xdd;
+        SimpleProfile_SetParameter( SIMPLEPROFILE_CHAR7,SIMPLEPROFILE_CHAR7_LEN,status_buf );
     }
-  }
+      //如果數據溢出
+      if(nodeCount > 200){
+        for(int i = 0; i<200 ; i++){
+          dataNode[i] = dataNode[i+1];
+        }
+        nodeCount = 0;
+      }
+  }else{
+      //重新计时，意味着一旦非连续性变化将不会改变桌子判定状态
+      statuStabalizeCount = 0;
+    }
 /*  if(previousStatus != currentStatus){
     if(onDuty){
       if(higt_value > 900){
